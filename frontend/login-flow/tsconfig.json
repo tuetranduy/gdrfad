@@ -1,0 +1,26 @@
+{
+    "compilerOptions": {
+        "target": "ES6",
+        "module": "es6",
+        "moduleResolution": "node",
+        "sourceMap": true,
+        "resolveJsonModule": true,
+        "forceConsistentCasingInFileNames": true,
+        "allowSyntheticDefaultImports": true,
+        "baseUrl": ".",
+        "paths": {
+            "@page-objects/*": [
+                "page-objects/*"
+            ],
+            "@fixtures/*": [
+                "fixtures/*"
+            ],
+            "@helpers/*": [
+                "helpers/*"
+            ],
+            "@test-data/*": [
+                "resources/test-data/*"
+            ],
+        }
+    }
+}
