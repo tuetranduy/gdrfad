@@ -1,44 +1,56 @@
 # Command Trigger App
 
-A modern React web application built with Vite, TypeScript, and shadcn/ui.
+A modern React web application built with Vite, TypeScript, and shadcn/ui that triggers Playwright tests via a backend API.
 
 ## Features
 
-- **Trigger Button**: A prominent button that executes a tentative command
+- **Trigger Button**: Click to run Playwright tests in the `/login-flow` folder
 - **Clean UI**: Modern, responsive design using shadcn/ui components
 - **Dark Mode**: Automatic dark/light theme support
-- **Status Feedback**: Real-time status updates when commands are triggered
+- **Status Feedback**: Real-time status updates when tests are running
 
 ## Tech Stack
 
-- **React 18** - UI library
-- **TypeScript** - Type safety
-- **Vite** - Fast build tool
-- **Tailwind CSS** - Utility-first styling
-- **shadcn/ui** - High-quality component library
+- **Frontend**: React 19, TypeScript, Vite, Tailwind CSS, shadcn/ui
+- **Backend**: Express.js, Node.js
 
 ## Getting Started
 
-### Install Dependencies
+### 1. Install Dependencies
+
+**Frontend:**
 ```bash
 npm install
 ```
 
-### Development Server
+**Backend:**
+```bash
+cd server
+npm install
+cd ..
+```
+
+### 2. Start the Backend Server
+
+```bash
+cd server
+npm start
+```
+
+The server runs on http://localhost:3001
+
+### 3. Start the Frontend Development Server
+
+In a separate terminal:
 ```bash
 npm run dev
 ```
+
 Opens at http://localhost:5173/
 
-### Build for Production
-```bash
-npm run build
-```
+### 4. Click the Trigger Button
 
-### Preview Production Build
-```bash
-npm run preview
-```
+The button will send a request to the backend, which runs the Playwright tests in `/login-flow` and returns the results.
 
 ## Project Structure
 
@@ -53,36 +65,20 @@ frontend/
 │   ├── App.tsx               # Main application with Trigger button
 │   ├── main.tsx              # Application entry point
 │   └── index.css             # Global styles & Tailwind config
-├── package.json
-├── vite.config.ts
-├── tailwind.config.js
-└── tsconfig.json
+├── server/
+│   ├── index.js              # Express server
+│   └── package.json          # Backend dependencies
+├── login-flow/               # Playwright tests
+└── package.json              # Frontend dependencies
 ```
 
-## Customizing the Trigger Command
+## How It Works
 
-The trigger button currently executes a placeholder command. To implement actual functionality:
-
-1. Open `src/App.tsx`
-2. Find the `handleTrigger` function
-3. Replace the placeholder logic with your actual command:
-
-```typescript
-const handleTrigger = async () => {
-  setLoading(true)
-  setStatus('Command triggered...')
-  
-  try {
-    // Replace this with your actual command
-    await yourCommandFunction()
-    setStatus('Command executed successfully!')
-  } catch (error) {
-    setStatus(\`Error: \${error}\`)
-  } finally {
-    setLoading(false)
-  }
-}
-```
+1. User clicks "Trigger" button in the React app
+2. Frontend sends POST request to `http://localhost:3001/api/trigger-tests`
+3. Backend runs `npx playwright test` in the `/login-flow` directory
+4. Test results are returned to the frontend
+5. Status message displays success or failure
 
 ## License
 

@@ -7,13 +7,25 @@ function App() {
 
   const handleTrigger = async () => {
     setLoading(true)
-    setStatus('Command triggered...')
-    
+    setStatus('Triggering Playwright tests...')
+
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      setStatus('Command executed successfully!')
+      const response = await fetch('http://localhost:3001/api/trigger-tests', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      const data = await response.json()
+      
+      if (data.success) {
+        setStatus('✓ ' + data.message)
+      } else {
+        setStatus('✗ ' + data.message)
+      }
     } catch (error) {
-      setStatus(`Error: ${error}`)
+      setStatus(`Error: ${error instanceof Error ? error.message : 'Failed to connect to server'}`)
     } finally {
       setLoading(false)
     }
@@ -32,7 +44,7 @@ function App() {
         </div>
 
         <div className="space-y-4">
-          <Button 
+          <Button
             onClick={handleTrigger}
             disabled={loading}
             size="lg"
