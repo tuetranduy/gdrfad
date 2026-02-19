@@ -1,4 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
+import dotenv from 'dotenv';
+import path from 'path';
+
+dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 export default defineConfig({
   testDir: './tests',
@@ -7,9 +11,9 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
+  timeout: 600 * 1000,
   use: {
-    baseURL: 'https://www.simplcommerce.com/',
-
+    baseURL: 'https://smart.gdrfad.gov.ae/',
     trace: 'on-first-retry',
   },
 
@@ -23,6 +27,5 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
       dependencies: ['setup'],
     },
-
   ]
 });

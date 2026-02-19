@@ -7,12 +7,10 @@ const router = express.Router();
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, '../uploads'));
+    cb(null, path.join(__dirname, '../../automation-engine'));
   },
   filename: (req, file, cb) => {
-    const timestamp = Date.now();
-    const originalName = file.originalname;
-    cb(null, `${timestamp}-${originalName}`);
+    cb(null, file.originalname);
   }
 });
 
