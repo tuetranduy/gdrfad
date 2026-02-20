@@ -3,6 +3,7 @@ import cors from 'cors';
 import { spawn } from 'child_process';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+import { createServer } from 'http';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -15,12 +16,17 @@ app.use(express.json());
 
 app.post('/api/trigger-tests', (req, res) => {
   console.log('Triggering Playwright tests...');
-  
+
   const loginFlowPath = join(__dirname, '..', 'login-flow');
-  
-  const child = spawn('npx', ['playwright', 'test'], {
+
+  // Use node to run playwright CLI directly instead of npx
+  // This works in both dev and packaged Electron app
+  const playwrightCli = join(loginFlowPath, 'node_modules', 'playwright', 'cli.js');
+
+  const child = spawn(process.execPath, [playwrightCli, 'test'], {
     cwd: loginFlowPath,
-    stdio: 'pipe'
+    stdio: 'pipe',
+    env: { ...process.env }
   });
 
   let stdout = '';
@@ -45,7 +51,7 @@ app.post('/api/trigger-tests', (req, res) => {
     } else {
       res.json({
         success: false,
-        message: `Playwright tests failed with exit code ${code}`
+        message: `Playwright tests failed with exit code ${code} - ${stderr}`
       });
     }
   });
@@ -59,6 +65,19 @@ app.post('/api/trigger-tests', (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
+// Graceful port handling
+const server = createServer(app);
+
+server.on('error', (error) => {
+  if (error.code === 'EADDRINUSE') {
+    console.error(`Port ${PORT} is already in use. Server not started.`);
+    process.exit(1);
+  } else {
+    console.error('Server error:', error);
+    process.exit(1);
+  }
+});
+
+server.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });

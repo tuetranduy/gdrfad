@@ -20,7 +20,7 @@ export default defineConfig({
   projects: [
     {
       name: 'setup', testMatch: /.*\.setup\.ts/,
-      use: { headless: true }
+      use: { headless: false }
     },
     {
       name: 'chromium',
