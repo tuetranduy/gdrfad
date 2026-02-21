@@ -15,6 +15,7 @@ export default defineConfig({
   use: {
     baseURL: 'https://smart.gdrfad.gov.ae/',
     trace: 'on-first-retry',
+    headless: false, // Show browser window when tests run
   },
 
   projects: [

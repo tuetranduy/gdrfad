@@ -8,6 +8,25 @@ let mainWindow;
 let serverProcess;
 const SERVER_PORT = 3001;
 
+// Ensure single instance
+const gotTheLock = app.requestSingleInstanceLock();
+
+if (!gotTheLock) {
+  // Another instance is already running, quit this one
+  console.log('Another instance is already running. Quitting...');
+  app.quit();
+  process.exit(0);
+}
+
+// This is the first instance
+app.on('second-instance', (event, commandLine, workingDirectory) => {
+  // Someone tried to run a second instance, focus our window instead
+  if (mainWindow) {
+    if (mainWindow.isMinimized()) mainWindow.restore();
+    mainWindow.focus();
+  }
+});
+
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1200,

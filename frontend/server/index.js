@@ -70,11 +70,10 @@ const server = createServer(app);
 
 server.on('error', (error) => {
   if (error.code === 'EADDRINUSE') {
-    console.error(`Port ${PORT} is already in use. Server not started.`);
-    process.exit(1);
+    console.log(`Port ${PORT} is already in use. Assuming server is already running.`);
+    // Don't exit - just log and continue, server might be from previous instance
   } else {
     console.error('Server error:', error);
-    process.exit(1);
   }
 });
 
